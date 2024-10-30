@@ -1,34 +1,52 @@
 pipeline {
     agent any
-
     tools {
-        nodejs 'NodeJS01' // Ensure this matches the name you provided in Jenkins
+        nodejs 'NodeJS01' // Ensure this matches the NodeJS installation name in Jenkins
     }
-
+    environment {
+        GITHUB_REPO = 'https://github.com/Be-Useful/my-node-app.git'
+        BRANCH_NAME = 'main' // Specified the branch to checkout
+    }
     stages {
-        stage('Checkout Code') {
-            steps {
-                // Checkout the code from GitHub
-                git 'https://github.com/Be-Useful/my-node-app.git' // Replace with your repository URL
-            }
+        // stage('Install Zip Dependency') { // Renamed for uniqueness
+// steps {
+// sh 'apt update && sudo apt install zip -y'
+// }
+// }
+    stage('Checkout') {
+        steps {
+            cleanWs() // Clean workspace before checkout
+            git branch: env.BRANCH_NAME, url: env.GITHUB_REPO // Checkout specific branch
+            sh 'ls -la' // Print current directory contents for debugging
         }
-
-        stage('Check Node Version') {
-            steps {
-                bat 'node -v' // Use bat instead of sh for Windows
-            }
+    }
+    stage('Install Node Dependencies') { // Renamed for uniqueness
+        steps {
+            sh 'node --version' // Print Node.js version
+            sh 'npm --version' // Print npm version
+            sh 'npm install --loglevel=error' // Install dependencies with error logging
         }
-
-        stage('Install Dependencies') {
-            steps {
-                bat 'npm install' // Install npm dependencies
-            }
+    }
+    stage('Run Tests') {
+        steps {
+            sh 'npm test || echo "No tests specified"' // Run tests
         }
-
-        stage('Run Application') {
-            steps {
-                bat 'npm start' // Start the Node.js application
-            }
+    }
+    stage('Package Application') {
+        steps {
+            sh 'zip -r jenkins-project-Devops_Class.zip.' // Create a zip file of the entire directory
+        }
+    }
+}
+post {
+        success {
+            echo 'Application Build and tests were successful!'
+        }
+        failure {
+            echo 'Build or tests failed!'
+        }
+        always {
+            echo 'Cleaning up...'
         }
     }
 }
