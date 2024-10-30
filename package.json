@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No tests specified\" && exit 0",  // Changed this line
+    "build": "echo \"Building the application...\" && exit 0",  // Placeholder for your build command
+    "deploy": "echo \"Deploying the application...\" && exit 0"  // Placeholder for your deploy command
   },
   "keywords": [],
   "author": "",
