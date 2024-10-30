@@ -1,39 +1,15 @@
 pipeline {
     agent any
-    tools {
-        nodejs 'NodeJS' // Name of your NodeJS installation in Jenkins
-    }
+
     stages {
-        stage('Checkout') {
+        stage('Check Node Version') {
             steps {
-                git url: 'https://github.com/your-repo/your-project.git', branch: 'main'
+                script {
+                    // Check if Node.js is installed
+                    def nodeVersion = sh(script: 'node -v', returnStdout: true).trim()
+                    echo "Node.js version: ${nodeVersion}"
+                }
             }
-        }
-        stage('Install Dependencies') {
-            steps {
-                bat 'npm install'
-            }
-        }
-        stage('Build with Maven') {
-            steps {
-                bat 'mvn clean package'
-            }
-        }
-        stage('Run Selenium Tests') {
-            steps {
-                bat 'mvn test -Dtest=YourSeleniumTestClass'
-            }
-        }
-    }
-    post {
-        success {
-            echo 'Build and tests were successful!'
-        }
-        failure {
-            echo 'Build or tests failed!'
-        }
-        always {
-            echo 'Cleaning up...'
         }
     }
 }
