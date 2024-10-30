@@ -7,7 +7,7 @@ pipeline {
         GITHUB_REPO = 'https://github.com/Be-Useful/my-node-app.git'
         BRANCH_NAME = 'main' // Specified the branch to checkout
     }
-    stages {
+    // stages {
         // stage('Install Zip Dependency') { // Renamed for uniqueness
 // steps {
 // sh 'apt update && sudo apt install zip -y'
